@@ -1,0 +1,24 @@
+---
+import { redirects } from '../data/redirects.js'
+
+export async function getStaticPaths() {
+
+	let paths = []
+
+	for (const redirectBatch of redirects) {
+		for (const redirectFromEntry of redirectBatch.from) {
+			paths.push({
+				params: { path: redirectFromEntry },
+				props: { target: redirectBatch.to }
+			})
+		}
+	}
+
+  return paths
+}
+
+const { target } = Astro.props
+
+---
+
+<meta http-equiv="refresh" content={`0; URL='${target}'`} />
