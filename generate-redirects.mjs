@@ -14,7 +14,19 @@ fs.closeSync(fd)
 // Process redirs
 for (const redirectBatch of redirects) {
   for (const redirectFromEntry of redirectBatch.from) {
+
+    // Generate the redir as-is
     fs.appendFileSync(REDIRECTS_FILE_DIR, `${redirectFromEntry} ${redirectBatch.to} ${redirectBatch.code || "308"}\n`)
+
+    // If redirect path doesn't end with a trailing slash, generate the trailing slash variant
+    if (redirectFromEntry.slice(-1) !== "/") {
+      fs.appendFileSync(REDIRECTS_FILE_DIR, `${redirectFromEntry}/ ${redirectBatch.to} ${redirectBatch.code || "308"}\n`)
+    } 
+
+    // If it does, generate the non-trailing-slash variant as long as the path isn't the root
+    else if (redirectFromEntry.slice(-1) === "/" && redirectFromEntry !== "/") {
+      fs.appendFileSync(REDIRECTS_FILE_DIR, `${redirectFromEntry.slice(0, -1)} ${redirectBatch.to} ${redirectBatch.code || "308"}\n`)
+    }
   }
 }
 
