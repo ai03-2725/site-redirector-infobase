@@ -8,7 +8,7 @@ export async function getStaticPaths() {
 	for (const redirectBatch of redirects) {
 		for (const redirectFromEntry of redirectBatch.from) {
 			paths.push({
-				params: { path: redirectFromEntry },
+				params: { path: redirectFromEntry === "/" ? undefined : redirectFromEntry },
 				props: { target: redirectBatch.to }
 			})
 		}
